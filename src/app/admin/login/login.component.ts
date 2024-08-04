@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LoginService } from '../../services/login/login.service';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +9,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LoginService } from '../../core/services/login/login.service';
 
 @Component({
   selector: 'app-login',
