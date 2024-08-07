@@ -7,24 +7,24 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginService } from '../../core/services/login/login.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrls: ['./login.component.css'],
 })
-export default class LoginComponent {
-  loginAdminForm!: FormGroup;
+export class LoginComponent {
+  loginAdminForm: FormGroup;
 
   constructor(
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private _trabajadorService: LoginService,
+    private loginService: LoginService,
     private router: Router
   ) {
     this.loginAdminForm = this.fb.group({
@@ -33,43 +33,42 @@ export default class LoginComponent {
     });
   }
 
-  login() {
-    const { email, password } = this.loginAdminForm.controls;
-
+  login(): void {
     if (this.loginAdminForm.invalid) {
-      if (email.errors?.['required'] || password.errors?.['required']) {
-        this.toastr.error('Todos los campos son obligatorios', 'Error');
-      } else if (email.errors?.['email']) {
-        this.toastr.error('El formato del email es inválido', 'Error');
-      }
+      this.showValidationErrors();
       return;
     }
 
-    // Si el formulario es válido, realiza la solicitud de login.
     const formValues = this.loginAdminForm.value;
-    this._trabajadorService.loginAdmin(formValues).subscribe({
-      next: (response: {token: string}) => {
-        const token = response.token
-        this.router.navigate(['admin/dashboard']);
+    this.loginService.loginAdmin(formValues).subscribe({
+      next: (response: { token: string }) => {
+        const token = response.token;
+        const expiresIn = 3600; // 1 hour
         localStorage.setItem('token', token);
-        console.log(token)
+        localStorage.setItem(
+          'expires_at',
+          (new Date().getTime() + expiresIn * 1000).toString()
+        );
+        this.router.navigate(['admin/dashboard']);
       },
-      error: (e: HttpErrorResponse) => {
-        this.msjError(e);
-      },
-      complete: () => console.info('complete'),
+      error: (error: HttpErrorResponse) => this.showError(error),
     });
   }
 
-  msjError(e: HttpErrorResponse) {
-    if (e.error.error) {
-      this.toastr.error(e.error.error, 'Error');
-    } else {
-      this.toastr.error(
-        'Ups ocurrio un error, comuniquese con el administrador',
-        'Error'
-      );
+  private showValidationErrors(): void {
+    const { email, password } = this.loginAdminForm.controls;
+    if (email.errors?.['required'] || password.errors?.['required']) {
+      this.toastr.error('Todos los campos son obligatorios', 'Error');
+    } else if (email.errors?.['email']) {
+      this.toastr.error('El formato del email es inválido', 'Error');
     }
+  }
+
+  private showError(error: HttpErrorResponse): void {
+    const errorMessage =
+      error.error?.error ||
+      'Ups ocurrió un error, comuníquese con el administrador';
+    this.toastr.error(errorMessage, 'Error');
   }
 
   isFieldInvalid(field: string): boolean {

@@ -13,6 +13,7 @@ export class HeaderComponent {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('expires_at');
     this.router.navigate(['/admin'])
   }
 }

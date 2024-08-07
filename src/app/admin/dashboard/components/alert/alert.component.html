@@ -1,0 +1,23 @@
+<div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center text-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+    <!-- Contenedor del icono y el título -->
+    <div class="flex flex-col items-center mb-4">
+      <!-- Icono centrado con animación -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-300 mb-2 animate-shake">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+        <path d="M12 9v4" />
+        <path d="M12 16v.01" />
+      </svg>
+      <!-- Título -->
+      <h2 class="text-lg font-semibold">Confirmar acción</h2>
+    </div>
+    <!-- Mensaje -->
+    <p class="mb-4">{{ message }}</p>
+    <!-- Botones -->
+    <div class="flex justify-center space-x-4">
+      <button (click)="cancel()" class="bg-red-500 text-white px-4 py-2 rounded-lg">No, cancelar</button>
+      <button (click)="confirm()" class="bg-green-500 text-white px-4 py-2 rounded-lg">Sí, confirmar</button>
+    </div>
+  </div>
+</div>

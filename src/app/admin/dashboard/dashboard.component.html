@@ -1,0 +1,11 @@
+<div class="flex h-screen">
+  <app-sidebar></app-sidebar>
+  
+  <div class="flex-1 flex flex-col">
+    <app-header></app-header>
+    
+    <main class="flex-1 p-6 bg-gray-300">
+      <router-outlet></router-outlet> <!-- Aquí se mostrará el CategoryComponent -->
+    </main>
+  </div>
+</div>
